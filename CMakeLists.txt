@@ -21,11 +21,17 @@ if (HttpServer_UseGoldLinker)
 endif()
 
 
+find_package(PkgConfig)
+find_package(ZLIB REQUIRED)
+
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
+
 if (HttpServer_FetchQtPromise )
     message(" QtPromise via FetchContent")
     FetchContent_Declare(qtpromise
         GIT_REPOSITORY https://github.com/marc-cpdesign/qtpromise.git
-        GIT_TAG a94ed16e63b67d9cc02bb2aab363e36169be222b
+        GIT_TAG a61a77610f6c03762270742fb98fcc75d53c522f
         GIT_SHALLOW true
     )
 
@@ -35,16 +41,6 @@ else()
     message(" QtPromise via find_package")
     find_package(qtpromise REQUIRED)
 endif()
-
-find_package(PkgConfig)
-find_package(ZLIB REQUIRED)
-
-find_package(Qt5
-    COMPONENTS
-        Core
-        Network
-    REQUIRED
-)
 
 add_subdirectory(src)
 
