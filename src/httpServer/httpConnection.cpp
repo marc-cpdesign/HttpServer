@@ -111,7 +111,7 @@ void HttpConnection::read()
             promise = promise.timeout(config->responseTimeout * 1000);
 
         promise
-            .fail([=](const QPromiseTimeoutException &error) {
+            .fail([=](const QtPromise::QPromiseTimeoutException &error) {
                 // Request timed out
                 response->setError(HttpStatus::RequestTimeout, "", false);
                 return nullptr;
