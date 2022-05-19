@@ -13,6 +13,6 @@ using HttpFunc = std::function<HttpPromise(std::shared_ptr<HttpData> data)>;
 using HttpResolveFunc = const QtPromise::QPromiseResolve<std::shared_ptr<HttpData>> &;
 using HttpRejectFunc = const QtPromise::QPromiseReject<std::shared_ptr<HttpData>> &;
 
-Q_DECLARE_METATYPE(QRegularExpressionMatch);
+Q_DECLARE_METATYPE(QRegularExpressionMatch)
 
 #endif // HTTP_SERVER_CONST_H
