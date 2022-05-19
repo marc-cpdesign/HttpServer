@@ -17,7 +17,6 @@
 #include <QRegularExpression>
 #include <QTcpSocket>
 #include <QTemporaryFile>
-#include <QTextCodec>
 #include <QUuid>
 #include <QUrl>
 #include <QUrlQuery>

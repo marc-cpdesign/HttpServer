@@ -1,5 +1,11 @@
 #include "httpRequest.h"
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    #include <QtCore/QTextCodec>
+#else
+    #include <QStringConverter>
+#endif
+
 HttpRequest::HttpRequest(HttpServerConfig *config) : config(config), buffer(), requestBytesSize(0),
     state_(State::ReadRequestLine), method_(), uri_(), version_(), expectedBodySize(0), body_(), mimeType_(),
     charset_(), boundary(), tmpFormData(nullptr)
@@ -553,6 +559,8 @@ QString HttpRequest::parseBodyStr() const
         return QString::fromUtf8(body_);
     else
     {
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         QTextCodec *codec = QTextCodec::codecForName(charset_.toLatin1());
         if (!codec)
         {
@@ -564,6 +572,19 @@ QString HttpRequest::parseBodyStr() const
         }
         else
             return codec->toUnicode(body_);
+#else
+        auto enc = QStringConverter::encodingForName(charset_.toLatin1());
+        if (!enc.has_value()) {
+            // Unknown codec, fallback to UTF-8 and log warning
+            if (config->verbosity >= HttpServerConfig::Verbose::Warning)
+                qWarning().noquote() << QString("Unknown charset when parsing body: %1. Falling back to UTF-8").arg(charset_);
+
+            return QString::fromUtf8(body_);
+        } else {
+            QStringDecoder sd(enc.value());
+            return sd(body_);
+        }
+#endif
     }
 }
 
