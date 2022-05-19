@@ -167,15 +167,15 @@ struct HttpException : public std::exception
     const HttpStatus status;
     const QString message;
 
-    HttpException(HttpStatus status) : status(status), message() {}
-    HttpException(HttpStatus status, QString message) : status(status), message(message) {}
+    HttpException(HttpStatus status_) : status(status_), message() {}
+    HttpException(HttpStatus status_, QString message_) : status(status_), message(std::move(message_)) {}
 };
 
 struct QStringCaseSensitiveHash
 {
     size_t operator()(const QString str) const
     {
-        static const unsigned int seed = (unsigned int)qGlobalQHashSeed();
+        static const auto seed = static_cast<unsigned int>(qGlobalQHashSeed());
 
         // Case-sensitive QString hash
         return qHash(str, seed);
@@ -194,7 +194,7 @@ struct QStringCaseInsensitiveHash
 {
     size_t operator()(const QString str) const
     {
-        static const unsigned int seed = (unsigned int)qGlobalQHashSeed();
+        static const auto seed = static_cast<unsigned int>(qGlobalQHashSeed());
 
         // Case-insensitive QString hash
         return qHash(str.toLower(), seed);
