@@ -13,17 +13,17 @@ struct HTTPSERVER_EXPORT HttpCookie
 {
     QString name;
     QString value;
-    int ageSeconds;
+    int ageSeconds = -1;
     QDateTime expiration;
     QString domain;
     QString path;
-    bool secure;
-    bool httpOnly;
+    bool secure = false;
+    bool httpOnly = false;
 
     HttpCookie() {}
-    HttpCookie(QString name, QString value, int ageSeconds = -1, QDateTime expiration = QDateTime(), QString domain = "",
-        QString path = "/", bool secure = false, bool httpOnly = false) : name(name), value(value), ageSeconds(ageSeconds),
-        expiration(expiration), domain(domain), path(path), secure(secure), httpOnly(httpOnly) {}
+    HttpCookie(QString name_, QString value_, int ageSeconds_ = -1, QDateTime expiration_ = QDateTime(), QString domain_ = "",
+        QString path_ = "/", bool secure_ = false, bool httpOnly_ = false) : name(name_), value(value_), ageSeconds(ageSeconds_),
+        expiration(expiration_), domain(domain_), path(path_), secure(secure_), httpOnly(httpOnly_) {}
 
     QByteArray toByteArray() const
     {
@@ -33,23 +33,29 @@ struct HTTPSERVER_EXPORT HttpCookie
         buf += '=';
         buf += QUrl::toPercentEncoding(value);
 
-        if (expiration.isValid())
+        if (expiration.isValid()) {
             buf += "; Expires=" + expiration.toString(Qt::RFC2822Date).toLatin1();
+        }
 
-        if (ageSeconds > 0)
+        if (ageSeconds > 0) {
             buf += "; Max-Age=" + QString::number(ageSeconds).toLatin1();
+        }
 
-        if (!domain.isEmpty())
+        if (!domain.isEmpty()) {
             buf += "; Domain=" + domain.toLatin1();
+        }
 
-        if (!path.isEmpty())
+        if (!path.isEmpty()) {
             buf += "; Path=" + QUrl::toPercentEncoding(path);
+        }
 
-        if (secure)
+        if (secure) {
             buf += "; Secure";
+        }
 
-        if (httpOnly)
+        if (httpOnly) {
             buf += "; HttpOnly";
+        }
 
         return buf;
     }
