@@ -10,12 +10,15 @@
 #include <QtMath>
 #include <zlib.h>
 
+#if defined(HTTPSERVER_STATIC)
+# define HTTPSERVER_EXPORT
+#else
 #if defined(HTTPSERVER_LIBRARY)
 #  define HTTPSERVER_EXPORT Q_DECL_EXPORT
 #else
 #  define HTTPSERVER_EXPORT Q_DECL_IMPORT
 #endif
-
+#endif
 
 enum class HttpStatus
 {
