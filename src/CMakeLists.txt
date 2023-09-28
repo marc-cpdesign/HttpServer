@@ -49,6 +49,15 @@ set(HEADERS
         httpServer/util.h
 )
 
+get_target_property(target_type httpServer TYPE)
+if (target_type STREQUAL STATIC_LIBRARY)
+
+target_compile_definitions(httpServer
+    PUBLIC
+        HTTPSERVER_STATIC
+    )
+endif()
+
 add_library(httpServer::httpServer ALIAS httpServer)
 
 set_target_properties(httpServer
